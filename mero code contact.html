@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000022, #000011, #000000);
+            color: #fff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            z-index: -3;
+            opacity: 0.35;
+        }
+        body::before {
+            width: 720px;
+            height: 720px;
+            background: radial-gradient(circle, #001133, #00aaff, #002244);
+            top: -180px;
+            left: -180px;
+        }
+        body::after {
+            width: 580px;
+            height: 580px;
+            background: radial-gradient(circle, #002233, #00ffdd, #001122);
+            bottom: -140px;
+            right: -140px;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #ffffff, 0 0 14px #a0f7ff;
+            animation: twinkle linear infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0.35; transform: scale(0.75); }
+            100% { opacity: 1;    transform: scale(1.15); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ffffff, transparent);
+            box-shadow: 0 0 10px #ffffff, 0 0 22px #00f7ff;
+            z-index: -2;
+            pointer-events: none;
+            animation: shoot linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0%   { transform: translateX(-200px) rotate(var(--angle)); opacity: 0.95; }
+            100% { transform: translateX(calc(100vw + 300px)) rotate(var(--angle)); opacity: 0; }
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.92);
+            padding: 18px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 247, 255, 0.2);
+        }
+
+        .navbar a {
+            color: #00f7ff;
+            margin: 0 25px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #a0f7ff;
+            text-shadow: 0 0 18px #00f7ff;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background: radial-gradient(circle at top, rgba(0, 170, 255, 0.12), transparent),
+                        radial-gradient(circle at bottom, rgba(0, 255, 221, 0.12), transparent);
+            position: relative;
+            z-index: 5;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            color: #a0f7ff;
+            text-shadow: 0 0 20px #00ccff, 0 0 40px #0099ff;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #b0d4ff;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 32px;
+            background: linear-gradient(45deg, #00aaff, #00f7ff);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.4s;
+            box-shadow: 0 0 22px #00ccff;
+        }
+
+        .btn:hover {
+            transform: scale(1.08) translateY(-4px);
+            box-shadow: 0 0 35px #00f7ff;
+        }
+
+        .profile {
+            width: 180px;
+            border-radius: 50%;
+            border: 5px solid #00f7ff;
+            margin-top: 30px;
+            transition: 0.4s;
+            box-shadow: 0 0 30px #00f7ff;
+        }
+
+        .profile:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px #00f7ff;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1100px;
+            margin: 40px auto;
+            background: rgba(10, 15, 40, 0.22);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.2);
+            backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            position: relative;
+            z-index: 5;
+        }
+
+        h2 {
+            color: #a0f7ff;
+            text-align: center;
+            font-size: 2.4em;
+            text-shadow: 0 0 15px #00f7ff;
+            margin-bottom: 25px;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .skill-card {
+            background: rgba(15, 25, 55, 0.75);
+            padding: 28px 20px;
+            border-radius: 18px;
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid rgba(0, 204, 255, 0.3);
+        }
+
+        .skill-card h3 {
+            color: #00f7ff;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-12px) scale(1.04);
+            box-shadow: 0 0 30px #00f7ff;
+            border-color: #00f7ff;
+        }
+
+        /* ===== QUIZ SECTION ===== */
+        #quiz-section {
+            width: 85%;
+            max-width: 800px;
+            margin: 40px auto 60px;
+            background: rgba(5, 10, 30, 0.6);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 0 50px rgba(0, 247, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 247, 255, 0.18);
+            position: relative;
+            z-index: 5;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h2 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .quiz-header p {
+            color: #7ec8e3;
+            font-size: 1em;
+        }
+
+        /* Scoreboard strip */
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 247, 255, 0.07);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px 24px;
+            margin-bottom: 28px;
+            font-size: 0.95em;
+        }
+
+        .quiz-meta span {
+            color: #a0f7ff;
+            font-weight: bold;
+        }
+
+        .quiz-meta .score-val { font-size: 1.3em; color: #00f7ff; }
+
+        /* Progress bar */
+        .progress-bar-wrap {
+            background: rgba(255,255,255,0.08);
+            border-radius: 50px;
+            height: 6px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00aaff, #00f7ff);
+            border-radius: 50px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px #00f7ff;
+        }
+
+        /* Question card */
+        .question-card {
+            animation: fadeSlideIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            font-size: 0.82em;
+            color: #7ec8e3;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 1.35em;
+            color: #e0f4ff;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 540px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background: rgba(0, 60, 100, 0.4);
+            border: 1.5px solid rgba(0, 200, 255, 0.3);
+            color: #cce9ff;
+            padding: 16px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: left;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,247,255,0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #00f7ff;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(0, 247, 255, 0.25);
+        }
+
+        .option-btn:hover:not(:disabled)::before { opacity: 1; }
+
+        .option-btn.correct {
+            background: rgba(0, 200, 100, 0.2);
+            border-color: #00e676;
+            color: #00e676;
+            box-shadow: 0 0 18px rgba(0, 230, 118, 0.4);
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 60, 60, 0.2);
+            border-color: #ff4444;
+            color: #ff6666;
+            box-shadow: 0 0 14px rgba(255, 68, 68, 0.3);
+        }
+
+        .option-btn:disabled { cursor: not-allowed; }
+
+        /* Feedback */
+        .feedback-box {
+            margin-top: 20px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1em;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            animation: fadeSlideIn 0.3s ease forwards;
+        }
+
+        .feedback-box.show { display: block; }
+        .feedback-box.correct-fb { background: rgba(0,230,118,0.12); border: 1px solid #00e676; color: #00e676; }
+        .feedback-box.wrong-fb  { background: rgba(255,68,68,0.12);  border: 1px solid #ff4444; color: #ff6060; }
+
+        /* Next button */
+        .next-btn {
+            display: block;
+            margin: 22px auto 0;
+            padding: 13px 38px;
+            background: linear-gradient(45deg, #0077cc, #00f7ff);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.35s;
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+            display: none;
+        }
+
+        .next-btn.show { display: block; }
+
+        .next-btn:hover {
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: 0 0 35px #00f7ff;
+        }
+
+        /* ---- RESULTS SCREEN ---- */
+        .results-screen {
+            text-align: center;
+            animation: fadeSlideIn 0.5s ease forwards;
+            display: none;
+        }
+
+        .results-screen.show { display: block; }
+
+        .result-emoji {
+            font-size: 4.5em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .result-score-big {
+            font-size: 3.5em;
+            color: #00f7ff;
+            text-shadow: 0 0 20px #00f7ff;
+            font-weight: bold;
+        }
+
+        .result-label {
+            color: #7ec8e3;
+            font-size: 1.15em;
+            margin: 10px 0 24px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 10px 26px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 28px;
+            border: 2px solid;
+        }
+
+        .badge-gold   { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 18px rgba(255,215,0,0.3); }
+        .badge-silver { border-color: #a0f7ff; color: #a0f7ff; box-shadow: 0 0 14px rgba(160,247,255,0.2); }
+        .badge-bronze { border-color: #ff8c00; color: #ff8c00; box-shadow: 0 0 14px rgba(255,140,0,0.2); }
+        .badge-try    { border-color: #888;    color: #aaa; }
+
+        .score-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .breakdown-item {
+            background: rgba(0, 247, 255, 0.07);
+            border: 1px solid rgba(0,247,255,0.2);
+            border-radius: 14px;
+            padding: 14px 22px;
+            text-align: center;
+        }
+
+        .breakdown-item .big { font-size: 2em; font-weight: bold; color: #00f7ff; }
+        .breakdown-item .lbl { font-size: 0.85em; color: #7ec8e3; margin-top: 4px; }
+
+        .restart-btn {
+            padding: 14px 40px;
+            background: linear-gradient(45deg, #00aaff, #00f7ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 0 22px #00ccff;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.08) translateY(-4px);
+            box-shadow: 0 0 35px #00f7ff;
+        }
+
+        /* Category pills */
+        .category-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0,247,255,0.1);
+            border: 1px solid rgba(0,247,255,0.25);
+            border-radius: 50px;
+            font-size: 0.75em;
+            color: #7ec8e3;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== QUIZ START SCREEN ===== */
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen p {
+            color: #7ec8e3;
+            margin-bottom: 14px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .quiz-features {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 22px 0 32px;
+        }
+
+        .feat-pill {
+            background: rgba(0,247,255,0.08);
+            border: 1px solid rgba(0,247,255,0.22);
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-size: 0.9em;
+            color: #a0f7ff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            background: rgba(0, 0, 0, 0.95);
+            color: #888;
+            font-size: 0.95em;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <a href="#">Home</a>
+      <a href="file:///C:/Users/user/OneDrive/Documents/mero%20code.html">Contact</a>
+        <a href="https://github.com/yashkc654-lang" target="_blank">Projects</a>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Hi, I'm Suyog k.c 👋</h1>
+        <p>A Grade 11 Computer Science Student & Future Developer</p>
+        <a href="#skills" class="btn">Explore My Skills 🚀</a>
+        <br>
+        <img src="bakiii.jpg" class="profile" alt="Suyog k.c">
+    </div>
+
+    <!-- SKILLS SECTION -->
+    <div class="container">
+        <h2 id="skills">🚀 My Skills</h2>
+        <div class="skills">
+            <div class="skill-card">
+                <h3>HTML</h3>
+                <p>Creating responsive websites</p>
+            </div>
+            <div class="skill-card">
+                <h3>C Programming</h3>
+                <p>Strong programming basics</p>
+            </div>
+            <div class="skill-card">
+                <h3>Graphic Design</h3>
+                <p>Designing UI & posters</p>
+            </div>
+            <div class="skill-card">
+                <h3>Problem Solving</h3>
+                <p>Logical & analytical thinking</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== QUIZ SECTION ===== -->
+    <div id="quiz-section">
+        <div class="quiz-header">
+            <h2>🧠 CS Quiz Challenge</h2>
+            <p>Test your Computer Science knowledge!</p>
+        </div>
+
+        <!-- START SCREEN -->
+        <div class="start-screen" id="start-screen">
+            <p>Think you know your CS basics? Challenge yourself with 10 questions covering HTML, C Programming, Logic, and more!</p>
+            <div class="quiz-features">
+                <span class="feat-pill">⚡ 10 Questions</span>
+                <span class="feat-pill">🎯 4 Categories</span>
+                <span class="feat-pill">🏆 Score & Badges</span>
+                <span class="feat-pill">🔁 Replayable</span>
+            </div>
+            <button class="restart-btn" onclick="startQuiz()">Launch Quiz 🚀</button>
+        </div>
+
+        <!-- QUIZ PLAY AREA -->
+        <div id="quiz-play" style="display:none;">
+            <!-- Meta bar -->
+            <div class="quiz-meta">
+                <div>Question <span id="q-num">1</span> / <span id="q-total">10</span></div>
+                <div>Score: <span class="score-val" id="live-score">0</span></div>
+                <div>⏱ <span id="timer-disp">15</span>s</div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+            </div>
+
+            <!-- Question -->
+            <div class="question-card" id="q-card">
+                <div class="category-pill" id="q-category"></div>
+                <div class="question-number" id="q-number-label"></div>
+                <div class="question-text" id="q-text"></div>
+                <div class="options-grid" id="options-container"></div>
+                <div class="feedback-box" id="feedback-box"></div>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next →</button>
+            </div>
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div class="results-screen" id="results-screen">
+            <span class="result-emoji" id="result-emoji">🎉</span>
+            <div class="result-score-big" id="result-score">0/10</div>
+            <div class="result-label" id="result-label">Great job!</div>
+            <div class="result-badge" id="result-badge">🥇 Space Coder</div>
+            <div class="score-breakdown">
+                <div class="breakdown-item">
+                    <div class="big" id="r-correct">0</div>
+                    <div class="lbl">✅ Correct</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="big" id="r-wrong">0</div>
+                    <div class="lbl">❌ Wrong</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="big" id="r-skipped">0</div>
+                    <div class="lbl">⏭ Skipped</div>
+                </div>
+            </div>
+            <button class="restart-btn" onclick="restartQuiz()">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 My Creative Portfolio • Exploring the Universe
+    </footer>
+
+    <script>
+        // ===== STAR & SHOOTING STAR GENERATORS =====
+        function createStars(count) {
+            const container = document.querySelector('.stars');
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2.8 + 0.9;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                const duration = Math.random() * 4 + 2.5;
+                star.style.animationDuration = `${duration}s`;
+                star.style.animationDelay = `-${Math.random() * 8}s`;
+                container.appendChild(star);
+            }
+        }
+
+        function createShootingStar() {
+            const container = document.querySelector('.stars');
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.top = `${Math.random() * 75 + 8}vh`;
+            const angle = Math.random() * 60 - 25;
+            star.style.setProperty('--angle', `${angle}deg`);
+            star.style.width = `${Math.random() * 110 + 90}px`;
+            const duration = Math.random() * 1.4 + 0.9;
+            star.style.animationDuration = `${duration}s`;
+            container.appendChild(star);
+            setTimeout(() => star.remove(), duration * 1000 + 200);
+        }
+
+        window.addEventListener('load', () => {
+            createStars(420);
+            function spawnRandomShootingStar() {
+                createShootingStar();
+                setTimeout(spawnRandomShootingStar, Math.random() * 1750 + 350);
+            }
+            spawnRandomShootingStar();
+        });
+
+        // ===== QUIZ DATA =====
+        const allQuestions = [
+            {
+                category: "🌐 HTML",
+                question: "What does HTML stand for?",
+                options: ["HyperText Markup Language", "HighText Machine Language", "HyperText Making Language", "Hyper Typing Markup Language"],
+                answer: 0,
+                explanation: "HTML = HyperText Markup Language — the backbone of every webpage!"
+            },
+            {
+                category: "🌐 HTML",
+                question: "Which tag is used to create a hyperlink in HTML?",
+                options: ["<link>", "<href>", "<a>", "<url>"],
+                answer: 2,
+                explanation: "The <a> (anchor) tag is used to create hyperlinks. The href attribute holds the URL."
+            },
+            {
+                category: "🌐 HTML",
+                question: "Which HTML tag is used for the largest heading?",
+                options: ["<h6>", "<heading>", "<head>", "<h1>"],
+                answer: 3,
+                explanation: "<h1> is the largest heading tag. Headings go from h1 (biggest) to h6 (smallest)."
+            },
+            {
+                category: "💻 C Programming",
+                question: "What is the correct syntax to print 'Hello' in C?",
+                options: ['print("Hello")', 'echo "Hello"', 'printf("Hello")', 'cout << "Hello"'],
+                answer: 2,
+                explanation: "In C, printf() is used for output. cout is for C++, print() is Python."
+            },
+            {
+                category: "💻 C Programming",
+                question: "Which symbol ends a statement in C?",
+                options: [".", ":", ";", ","],
+                answer: 2,
+                explanation: "Every C statement ends with a semicolon (;). Missing it causes a compile error!"
+            },
+            {
+                category: "💻 C Programming",
+                question: "What does 'int' mean in C?",
+                options: ["Internal variable", "Integer data type", "Input function", "Interface type"],
+                answer: 1,
+                explanation: "int declares an integer variable — stores whole numbers like 1, 42, -7."
+            },
+            {
+                category: "🧠 Logic & Algorithms",
+                question: "What is the output of: 5 + 3 * 2 ?",
+                options: ["16", "11", "10", "13"],
+                answer: 1,
+                explanation: "Operator precedence! Multiplication first: 3*2=6, then 5+6=11."
+            },
+            {
+                category: "🧠 Logic & Algorithms",
+                question: "Which loop in C checks the condition AFTER executing the body?",
+                options: ["for loop", "while loop", "do-while loop", "if-else"],
+                answer: 2,
+                explanation: "The do-while loop runs the body at least once, THEN checks the condition."
+            },
+            {
+                category: "🖥️ Computer Basics",
+                question: "What does CPU stand for?",
+                options: ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Core Processing Unit"],
+                answer: 0,
+                explanation: "CPU = Central Processing Unit — the brain of the computer!"
+            },
+            {
+                category: "🖥️ Computer Basics",
+                question: "Which of these is an example of an operating system?",
+                options: ["Google Chrome", "Microsoft Word", "Windows 11", "Adobe Photoshop"],
+                answer: 2,
+                explanation: "Windows 11 is an OS. Chrome and Word are apps that run ON an operating system."
+            }
+        ];
+
+        // ===== QUIZ STATE =====
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let skippedCount = 0;
+        let answered = false;
+        let timerInterval = null;
+        let timeLeft = 15;
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-play').style.display = 'block';
+            questions = shuffle(allQuestions);
+            currentIndex = 0;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            skippedCount = 0;
+            document.getElementById('live-score').textContent = '0';
+            document.getElementById('q-total').textContent = questions.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            clearInterval(timerInterval);
+            timeLeft = 15;
+
+            const q = questions[currentIndex];
+            const total = questions.length;
+
+            // Update meta
+            document.getElementById('q-num').textContent = currentIndex + 1;
+            document.getElementById('prog-bar').style.width = `${((currentIndex) / total) * 100}%`;
+            document.getElementById('timer-disp').textContent = timeLeft;
+
+            // Refresh question card animation
+            const card = document.getElementById('q-card');
+            card.style.animation = 'none';
+            card.offsetHeight; // reflow
+            card.style.animation = '';
+
+            // Populate
+            document.getElementById('q-category').textContent = q.category;
+            document.getElementById('q-number-label').textContent = `Question ${currentIndex + 1} of ${total}`;
+            document.getElementById('q-text').textContent = q.question;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(i);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('feedback-box').classList.remove('show', 'correct-fb', 'wrong-fb');
+            document.getElementById('next-btn').classList.remove('show');
+
+            // Start timer
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-disp').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!answered) timeUp();
+                }
+            }, 1000);
+        }
+
+        function timeUp() {
+            answered = true;
+            skippedCount++;
+            const q = questions[currentIndex];
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+            btns[q.answer].classList.add('correct');
+
+            const fb = document.getElementById('feedback-box');
+            fb.textContent = `⏰ Time's up! The answer was: ${q.options[q.answer]}`;
+            fb.className = 'feedback-box wrong-fb show';
+
+            document.getElementById('next-btn').classList.add('show');
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timerInterval);
+
+            const q = questions[currentIndex];
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+
+            const fb = document.getElementById('feedback-box');
+
+            if (index === q.answer) {
+                btns[index].classList.add('correct');
+                score += 10;
+                correctCount++;
+                document.getElementById('live-score').textContent = score;
+                fb.textContent = `✅ Correct! ${q.explanation}`;
+                fb.className = 'feedback-box correct-fb show';
+                spawnCelebration();
+            } else {
+                btns[index].classList.add('wrong');
+                btns[q.answer].classList.add('correct');
+                wrongCount++;
+                fb.textContent = `❌ Wrong! ${q.explanation}`;
+                fb.className = 'feedback-box wrong-fb show';
+            }
+
+            document.getElementById('next-btn').classList.add('show');
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-play').style.display = 'none';
+            const rs = document.getElementById('results-screen');
+            rs.classList.add('show');
+
+            const total = questions.length;
+            const pct = (correctCount / total) * 100;
+
+            document.getElementById('result-score').textContent = `${score} pts`;
+            document.getElementById('r-correct').textContent = correctCount;
+            document.getElementById('r-wrong').textContent = wrongCount;
+            document.getElementById('r-skipped').textContent = skippedCount;
+
+            let emoji, label, badgeText, badgeClass;
+            if (pct === 100) {
+                emoji = '🌟'; label = 'Perfect Score! You\'re a CS legend!';
+                badgeText = '🥇 Galactic Genius'; badgeClass = 'badge-gold';
+            } else if (pct >= 70) {
+                emoji = '🚀'; label = 'Great job, Space Coder!';
+                badgeText = '🥈 Star Developer'; badgeClass = 'badge-silver';
+            } else if (pct >= 40) {
+                emoji = '💫'; label = 'Not bad! Keep learning!';
+                badgeText = '🥉 Code Explorer'; badgeClass = 'badge-bronze';
+            } else {
+                emoji = '🌙'; label = 'Keep studying — you\'ll get there!';
+                badgeText = '🛸 Space Cadet'; badgeClass = 'badge-try';
+            }
+
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-label').textContent = label;
+            const badge = document.getElementById('result-badge');
+            badge.textContent = badgeText;
+            badge.className = `result-badge ${badgeClass}`;
+
+            // Final progress bar = 100%
+            document.getElementById('prog-bar').style.width = '100%';
+        }
+
+        function restartQuiz() {
+            document.getElementById('results-screen').classList.remove('show');
+            startQuiz();
+        }
+
+        // Shooting star celebration on correct answer
+        function spawnCelebration() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createShootingStar(), i * 150);
+            }
+        }
+    </script>
+</body>
+</html>
