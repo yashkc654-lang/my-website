@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000022, #000011, #000000);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* SUBTLE GALAXY CLOUDS (no purple - only deep blue & cyan) */
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            z-index: -3;
+            opacity: 0.35;
+        }
+        body::before {
+            width: 720px;
+            height: 720px;
+            background: radial-gradient(circle, #001133, #00aaff, #002244);
+            top: -180px;
+            left: -180px;
+        }
+        body::after {
+            width: 580px;
+            height: 580px;
+            background: radial-gradient(circle, #002233, #00ffdd, #001122);
+            bottom: -140px;
+            right: -140px;
+        }
+
+        /* STARS CONTAINER */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* TWINKLING STARS (stay in place) */
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #ffffff,
+                        0 0 14px #a0f7ff;
+            animation: twinkle linear infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0.35; transform: scale(0.75); }
+            100% { opacity: 1;    transform: scale(1.15); }
+        }
+
+        /* FLYING SHOOTING STARS (random places & directions) */
+        .shooting-star {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ffffff, transparent);
+            box-shadow: 0 0 10px #ffffff,
+                        0 0 22px #00f7ff;
+            z-index: -2;
+            pointer-events: none;
+            animation: shoot linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(-200px) rotate(var(--angle));
+                opacity: 0.95;
+            }
+            100% {
+                transform: translateX(calc(100vw + 300px)) rotate(var(--angle));
+                opacity: 0;
+            }
+        }
+
+        /* NAVBAR - pure space blue */
+        .navbar {
+            background: rgba(0, 0, 0, 0.92);
+            padding: 18px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 247, 255, 0.2);
+        }
+
+        .navbar a {
+            color: #00f7ff;
+            margin: 0 25px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #a0f7ff;
+            text-shadow: 0 0 18px #00f7ff;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 620px;
+            margin: 100px auto 60px;
+            padding: 45px 35px;
+            border-radius: 24px;
+            background: rgba(10, 15, 40, 0.22);
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.2);
+            backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            animation: fadeUp 1.2s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.7em;
+            color: #a0f7ff;
+            text-shadow: 0 0 20px #00ccff,
+                         0 0 35px #0099ff;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #b0d4ff;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        /* FORM INPUTS */
+        input, textarea {
+            width: 90%;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 204, 255, 0.4);
+            background: rgba(10, 20, 50, 0.75);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00f7ff;
+            box-shadow: 0 0 18px #00f7ff;
+        }
+
+        /* BUTTON */
+        button {
+            padding: 16px 38px;
+            background: linear-gradient(45deg, #00aaff, #00f7ff);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: bold;
+            transition: all 0.4s;
+            box-shadow: 0 0 22px #00ccff;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 0 35px #00f7ff;
+        }
+
+        /* SUCCESS MESSAGE */
+        #successMsg {
+            font-weight: bold;
+            color: #00ffae;
+            margin-top: 20px;
+            display: none;
+            text-shadow: 0 0 12px #00ffae;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            color: #888;
+            font-size: 0.95em;
+            position: relative;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STARS & FLYING STARS LAYER -->
+    <div class="stars"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <a href="file:///C:/Users/user/OneDrive/Documents/home.html.html">Home</a>
+        <a href="file:///C:/Users/user/OneDrive/Documents/contact.html.html">Contact</a>
+    </div>
+
+    <!-- FORM CONTAINER -->
+    <div class="container">
+        <h1>Contact Me 🌌</h1>
+        <p>Send a message across the cosmos...</p>
+        
+        <form onsubmit="showMessage(event)">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea rows="5" placeholder="Your Message"></textarea>
+            <button type="submit">Send Message 🚀</button>
+            <p id="successMsg">Message transmitted successfully ✅</p>
+        </form>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>© 2026 My Portfolio • Exploring the Universe</footer>
+
+    <script>
+        // Show success message
+        function showMessage(event) {
+            event.preventDefault();
+            const success = document.getElementById("successMsg");
+            success.style.display = "block";
+            event.target.reset();
+            
+            setTimeout(() => {
+                success.style.display = "none";
+            }, 4000);
+        }
+
+        // Create twinkling background stars
+        function createStars(count) {
+            const container = document.querySelector('.stars');
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 2.8 + 0.9;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                
+                const duration = Math.random() * 4 + 2.5;
+                star.style.animationDuration = `${duration}s`;
+                star.style.animationDelay = `-${Math.random() * 8}s`;
+                
+                container.appendChild(star);
+            }
+        }
+
+        // Create one flying shooting star (random place & direction)
+        function createShootingStar() {
+            const container = document.querySelector('.stars');
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            
+            // Random vertical position
+            const topPos = Math.random() * 75 + 8;
+            star.style.top = `${topPos}vh`;
+            
+            // Random angle (-25° to +35°)
+            const angle = Math.random() * 60 - 25;
+            star.style.setProperty('--angle', `${angle}deg`);
+            
+            // Random length
+            const length = Math.random() * 110 + 90;
+            star.style.width = `${length}px`;
+            
+            // Random speed
+            const duration = Math.random() * 1.4 + 0.9;
+            star.style.animationDuration = `${duration}s`;
+            
+            container.appendChild(star);
+            
+            // Remove after animation ends
+            setTimeout(() => {
+                star.remove();
+            }, duration * 1000 + 200);
+        }
+
+        // Start everything
+        window.addEventListener('load', () => {
+            createStars(420);   // more stars for deeper space feel
+            
+            // Continuously spawn flying stars at random times
+            function spawnRandomShootingStar() {
+                createShootingStar();
+                // Next shooting star appears in 350ms - 2100ms (random)
+                setTimeout(spawnRandomShootingStar, Math.random() * 1750 + 350);
+            }
+            
+            spawnRandomShootingStar();
+        });
+    </script>
+</body>
+</html>
